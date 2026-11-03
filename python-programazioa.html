@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python programazioa · 4. gaia · Sistemak · Harrobia Ikastola</title>
+<meta name="description" content="MSS1 moduluko Python programazioa: aldagaiak, eragiketak, baldintzak, begiztak eta funtzioak. Teoria eta ariketa interaktiboak, nabigatzailean bertan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0A1F3D;--navy-2:#123564;--navy-3:#1c4a86;--blue:#4FA3E3;--blue-soft:#EAF5FD;--blue-mid:#CFE9FB;--red:#E43D4F;--red-dark:#C42638;--red-soft:#FDECEE;--ink:#101B2D;--muted:#55637A;--line:#D9E6F2;--ok:#1E8E5A;--ok-bg:#E4F6EC;--warn-bg:#FFF6E0;--term-bg:#0B1A2E;--term-ink:#D7E7F7;--term-green:#7EE3A8;--term-red:#FF8E9B;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;--sans:'Manrope',system-ui,-apple-system,"Segoe UI",Arial,sans-serif;--r:12px;--sh:0 18px 40px -18px rgba(10,31,61,.35),0 2px 8px rgba(10,31,61,.08)}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:74px}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:#eef5fb;line-height:1.55;overflow-x:hidden}
+a{color:var(--navy-3)}
+h1,h2,h3{font-family:var(--mono);color:var(--navy);letter-spacing:-.01em;margin:0 0 .5em;line-height:1.25}
+p{margin:0 0 1em}
+code,kbd{font-family:var(--mono)}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+.taskbar{position:sticky;top:0;z-index:60;background:rgba(10,25,49,.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08);color:#fff}
+.tb{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:12px;height:58px}
+.tb-home{display:flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-family:var(--mono);font-weight:700;font-size:.78rem;white-space:nowrap;padding:5px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.14)}
+.tb-home:hover{background:rgba(255,255,255,.08)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(228,61,79,.25)}
+.tb-title{font-family:var(--mono);font-size:.84rem;font-weight:700;flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-prog{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.72rem;color:#cfe3f7;white-space:nowrap}
+.bar{width:84px;height:7px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--term-green));transition:width .4s}
+.clock{font-family:var(--mono);font-size:.72rem;color:#dce9f7;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:5px 8px;border-radius:6px}
+@media(max-width:700px){.clock,.bar{display:none}.tb-home b{display:none}}
+.hero{background:radial-gradient(1200px 520px at 12% -20%,#163b6c 0%,transparent 62%),linear-gradient(180deg,var(--navy),#0d2749);color:#fff;padding:34px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:.74rem;color:var(--blue);font-weight:700;display:inline-flex;align-items:center;gap:8px;margin-bottom:10px}
+.eyebrow::before{content:"";width:22px;height:2px;background:var(--red)}
+.hero h1{font-size:clamp(1.9rem,4.6vw,3rem);color:#fff;font-weight:800;margin:6px 0 12px}
+.hero h1 span{color:var(--blue)}
+.lede{color:#c7dcf0;max-width:68ch}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.chips a{font-family:var(--mono);font-size:.72rem;color:#dbeafe;text-decoration:none;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:5px 10px}
+.chips a:hover{background:rgba(255,255,255,.18)}
+main{max-width:1100px;margin:0 auto;padding:26px 20px 60px}
+.leihoa{background:#fff;border:1px solid #e3edf6;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:26px;scroll-margin-top:74px}
+.titlebar{background:linear-gradient(180deg,#152e54,#0e2547);padding:9px 14px;display:flex;align-items:center;gap:9px}
+.dots{display:flex;gap:6px}
+.dots span{width:10px;height:10px;border-radius:50%;display:block}
+.dots span:nth-child(1){background:var(--red)}.dots span:nth-child(2){background:#F6C445}.dots span:nth-child(3){background:var(--term-green)}
+.path{font-family:var(--mono);font-size:.7rem;color:#cfe0f4}
+.gorputza{padding:22px 24px 26px}
+@media(max-width:560px){.gorputza{padding:18px 14px 22px}}
+.leihoa h2{font-size:1.35rem;margin:0 0 .2em}
+.leihoa h3{font-size:1rem;margin:1.3em 0 .5em}
+.azpi{color:var(--muted);font-size:.9rem}
+.kutxa{border-radius:10px;padding:12px 15px;margin:1em 0;font-size:.89rem;border-left:4px solid}
+.kutxa p:last-child{margin:0}
+.aholku{background:var(--blue-soft);border-color:var(--blue)}.garrantzi{background:var(--red-soft);border-color:var(--red)}.ohar{background:var(--warn-bg);border-color:#E8B33A}
+.tb-wrap{overflow-x:auto;margin:1em 0;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:380px}
+th,td{border-bottom:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+thead th{background:var(--navy);color:#fff;font-family:var(--mono);font-size:.76rem}
+tbody tr:nth-child(even){background:#f8fbfe}tbody tr:last-child td{border-bottom:0}
+td code,p code,li code{font-size:.82rem;background:var(--blue-soft);border-radius:4px;padding:1px 5px;color:var(--navy-3)}
+.kom{background:var(--term-bg);color:var(--term-ink);border:1px solid #1b3a5f;border-radius:9px;margin:.7em 0;overflow:hidden}
+.kom pre{margin:0;padding:11px 14px;font-family:var(--mono);font-size:.82rem;white-space:pre-wrap;word-break:break-word}
+.kom .run{display:flex;gap:8px;align-items:center;padding:6px 10px;background:#0d2745;border-top:1px solid #1b3a5f}
+.kom .out{margin:0;padding:9px 14px;font-family:var(--mono);font-size:.8rem;white-space:pre-wrap;word-break:break-word;color:var(--term-green);border-top:1px solid #1b3a5f;display:none}
+.kom .out.on{display:block}.em2{display:none}.em2.on{display:block}.out .er{color:var(--term-red)}
+.btn{font:inherit;font-size:.8rem;font-weight:700;border-radius:9px;padding:7px 13px;cursor:pointer;border:1.5px solid transparent;background:var(--navy);color:#fff}
+.btn:hover{background:var(--navy-2)}.btn[disabled]{opacity:.5;cursor:wait}
+.btn.b2{background:#fff;color:var(--navy);border-color:var(--navy)}.btn.b2:hover{background:var(--blue-soft)}
+.btn.sm{font-size:.72rem;padding:4px 10px}
+.ariketa{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:1.4em 0;background:#fff}
+.ariketa>header{background:linear-gradient(180deg,#f7fbff,#edf5fc);border-bottom:1px solid var(--line);padding:10px 15px;display:flex;align-items:center;gap:10px}
+.mota{font-family:var(--mono);font-size:.66rem;font-weight:700;color:#fff;background:var(--navy-3);border-radius:99px;padding:3px 9px;white-space:nowrap}
+.ariketa h3{font-size:.95rem;margin:0;flex:1}
+.ik{opacity:0}.eginda .ik{opacity:1}
+.eginda>header{background:linear-gradient(180deg,#f2fbf5,#e6f6ec);border-color:#c5e8d3}
+.ag{padding:15px 16px 17px}
+.ag p{font-size:.9rem}
+textarea{width:100%;font-family:var(--mono);font-size:.82rem;line-height:1.5;background:var(--term-bg);color:var(--term-ink);border:1px solid #1b3a5f;border-radius:9px;padding:10px 12px;resize:vertical;tab-size:4}
+textarea.sar{background:#fff;color:var(--ink);border:1.5px solid var(--line);min-height:0;margin-top:6px}
+.ag label{display:block;font-size:.74rem;font-weight:700;color:var(--muted);margin-top:8px}
+.ktr{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.em{margin-top:11px;font-size:.86rem;padding:9px 12px;border-radius:9px;display:none;white-space:pre-wrap;word-break:break-word}
+.em.on{display:block}.em.ona{background:var(--ok-bg);color:var(--ok);border:1px solid #bfe6cf;font-weight:700}
+.em.txarra{background:var(--red-soft);color:var(--red-dark);border:1px solid #f6cdd3}
+.em.arg{background:var(--blue-soft);color:var(--navy-3);border:1px solid var(--blue-mid)}
+.em .mono,.em code{font-family:var(--mono);font-size:.78rem}
+.gal{margin:0 0 1em;padding:0 0 .8em;border-bottom:1px dashed var(--line)}.gal:last-child{border:0}
+.gal>b{display:block;font-size:.92rem;margin-bottom:.5em}
+.auk{display:block;width:100%;text-align:left;font:inherit;font-size:.87rem;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:8px 11px;margin:5px 0;cursor:pointer}
+.auk:hover{border-color:var(--blue);background:var(--blue-soft)}
+.auk.ondo{border-color:var(--ok);background:var(--ok-bg)}.auk.gaizki{border-color:var(--red);background:var(--red-soft)}
+.arg2{font-size:.84rem;color:var(--navy-3);background:var(--blue-soft);border-radius:8px;padding:8px 11px;margin-top:6px;display:none}
+.arg2.on{display:block}
+footer{background:var(--navy);color:#9fb6d2;padding:28px 0 24px;font-size:.8rem}
+</style>
+</head>
+<body>
+<nav class="taskbar" aria-label="Nabigazio nagusia"><div class="tb">
+<a class="tb-home" href="index.html"><span class="dot"></span> <b>SISTEMAK</b> ◂ atarira</a>
+<div class="tb-title">4. gaia · Python programazioa</div>
+<div class="tb-prog" title="Gaindituriko ariketak"><span id="prog">0/0</span><span class="bar" aria-hidden="true"><i id="progBar"></i></span></div>
+<span class="clock" id="clock">00:00:00</span>
+</div></nav>
+
+<header class="hero"><div class="container">
+<div class="eyebrow">4. GAIA · MSS1</div>
+<h1>Python <span>programazioa</span></h1>
+<p class="lede">Aldagaiak, eragiketak, baldintzak, begiztak eta funtzioak. Hemen teoria irakurri, adibideak exekutatu eta ariketak egin ditzakezu — Python instalatu gabe, nabigatzailean bertan.</p>
+<div class="chips" id="chips"></div>
+</div></header>
+
+<main>
+
+<section class="leihoa" id="a0" data-c="0 · Martxan jarri" data-p="0-python-martxan"><div class="gorputza">
+<h2>0. Python martxan jartzea</h2>
+<p class="azpi">Programatzea ordenagailuari zer egin behar duen esatea da, berak ulertzen duen hizkuntzan eta ordena zehatz batean.</p>
+<p>Ordenagailua azkarra da, baina ez du ezer asmatzen: zuk esandakoa egiten du, hitzez hitz. Gida honen helburua oinarrizko egiturak ulertzea da: aldagaiak, kalkuluak, erabakiak, errepikapenak eta funtzioak.</p>
+<p>Python kodea testu arrunta da, <code>.py</code> luzapena duen fitxategi batean gordeta. Gelan Visual Studio Code erabiliko dugu; orri honetan, aldiz, kodea hemen bertan exekutatuko duzu. Pythonek lerroak goitik behera exekutatzen ditu, banan-banan. <code>print()</code>-ek parentesien artean jartzen zaiona pantailan idazten du.</p>
+<h3>Prestaketa</h3>
+<ol><li>Instalatu Python. Windowsen, instalatzailean markatu «Add Python to PATH» laukitxoa hasi aurretik.</li>
+<li>Ireki Visual Studio Code eta instalatu Python luzapena: ezkerreko barrako lauki-ikonoa, idatzi <code>Python</code>, eta <code>Install</code>.</li>
+<li>Sortu karpeta bat zure ariketetarako eta ireki VS Coden: <code>File › Open Folder</code>.</li></ol>
+<h3>Lehen programa</h3>
+<p>Sortu fitxategi berri bat eta gorde <code>lehena.py</code> izenarekin (luzapena <code>.py</code> izatea ezinbestekoa da). Exekutatu: eskuineko goiko aldeko ▶ botoia, edo <kbd>Ctrl</kbd> + <kbd>F5</kbd>. Emaitza beheko paneleko terminalean agertzen da.</p>
+<div class="kom"><pre data-run>print("Kaixo mundua!")
+print("Python ikasten hasi naiz.")</pre></div>
+<h3>Errore-mezuak</h3>
+<p>Akatsak etengabe agertuko zaizkizu, eta hori normala da. Garrantzitsuena azken lerroa da: errore-mota eta azalpena. Gainera, zein lerrotan gertatu den esaten dizu. Probatu:</p>
+<div class="kom"><pre data-run>print(izena)</pre></div>
+<p><code>NameError</code>: «izena» izeneko ezer ez dago definituta, hau da, aldagai hori ez duzu sortu.</p>
+<div class="kutxa aholku"><b>Kontuan:</b> 7. atalean ikusiko dugun <code>match-case</code> egitura Python 3.10etik aurrera bakarrik dago. Terminalean <code>python --version</code> idatziz ikusiko duzu zein bertsio duzun; Windowsen <code>python</code> ez badabil, probatu <code>py</code>.</div>
+</div></section>
+
+<section class="leihoa" id="a1" data-c="1 · Aldagaiak" data-p="1-aldagaiak"><div class="gorputza">
+<h2>1. Aldagaiak</h2>
+<p class="azpi">Aldagai bat informazioa gordetzeko lekua da: etiketa bat duen kutxa bat.</p>
+<p>Barruan zerbait sartzen duzu, eta kanpoan izen bat idazten diozu gero aurkitzeko. Aldagairik gabe, programa batek ezingo luke ezer gogoratu lerro batetik bestera. Izena idatzi, berdin ikurra jarri, eta balioa; ez duzu ezer deklaratu behar aldez aurretik.</p>
+<div class="kom"><pre data-run>izena = "Ane"
+adina = 16
+print(izena)    # aldagaia
+print("izena")  # testua</pre></div>
+<div class="kutxa aholku"><b>Berdin ikurrak ez du «berdina da» esan nahi.</b> <code>x = 5</code> agindu bat da: «gorde 5 x deitzen den kutxan». Eskuinetik ezkerrera irakurtzen da: <code>adina ← 16</code>. Hortaz, <code>16 = adina</code> idaztea errorea da.</div>
+<p>Komekin bereizita jar daitezke testua eta aldagaiak; Pythonek hutsune bat jartzen du koma bakoitzaren tokian. Balio berri bat gordetzean, zaharra galdu egiten da, eta aldagaia erabili aurretik sortu behar duzu.</p>
+<div class="kom"><pre data-run>izena = "Mikel"
+adina = 15
+print("Kaixo, nire izena", izena, "da")
+adina = 16
+print("Eta", adina, "urte ditut")</pre></div>
+<h3>Izenak</h3>
+<div class="tb-wrap"><table><thead><tr><th>Onartzen da</th><th>Ez da onartzen</th></tr></thead><tbody>
+<tr><td>Letrak: a-z, A-Z</td><td>Hutsuneak: <code>ikasle kopurua</code></td></tr>
+<tr><td>Zenbakiak, hasieran izan ezik: <code>adina2</code></td><td>Zenbakiz hastea: <code>2adina</code></td></tr>
+<tr><td>Azpimarra: <code>ikasle_kopurua</code></td><td>Ikur bereziak: <code>prezioa$</code>, <code>nota-1</code></td></tr>
+<tr><td>Letra larriak eta xeheak bereizten dira</td><td>Pythonen hitz gordeak: <code>if</code>, <code>while</code>, <code>print</code>...</td></tr></tbody></table></div>
+<p><code>Izena</code>, <code>izena</code> eta <code>IZENA</code> hiru aldagai desberdin dira. Izenak ulergarria izan behar du; ohiko hitzarmena: letra xehez eta hitzak azpimarraz banatuta, <code>prezio_totala</code> bezala.</p>
+<h3>Iruzkinak</h3>
+<p>Traola ikurraren (<code>#</code>) ondoren idazten duzun guztia Pythonek baztertu egiten du. Lerro bat kendu nahi duzunean baina ez ezabatu, <code>#</code> bat jartzen zaio aurretik.</p>
+<div class="ex" data-s="1"></div>
+</div></section>
+
+<section class="leihoa" id="a2" data-c="2 · Datu motak" data-p="2-datu-motak"><div class="gorputza">
+<h2>2. Datu motak</h2>
+<p class="azpi">Datu motak erabakitzen du zer egin dezakezun balio batekin.</p>
+<div class="tb-wrap"><table><thead><tr><th>Mota</th><th>Zer da</th><th>Adibidea</th><th>Oharra</th></tr></thead><tbody>
+<tr><td><code>str</code></td><td>Testua</td><td><code>"Igor"</code></td><td>Beti komatxoen artean</td></tr>
+<tr><td><code>int</code></td><td>Osoko zenbakia</td><td><code>16</code></td><td>Hamartarrik gabe</td></tr>
+<tr><td><code>float</code></td><td>Zenbaki hamartarra</td><td><code>1.75</code></td><td>Puntuarekin, ez komarekin</td></tr>
+<tr><td><code>bool</code></td><td>Egia ala gezurra</td><td><code>True</code></td><td><code>True</code> edo <code>False</code>, letra larriz</td></tr></tbody></table></div>
+<p>Testu oro komatxoen artean doa, bikoitzak edo bakunak, baina hasi eta amaitu berdinarekin. Komatxoen arteko guztia testua da, zenbakiak barne: <code>"123"</code> testua da, eta ezin duzu horrekin kalkulurik egin. <code>true</code> edo <code>TRUE</code> idatziz gero, <code>NameError</code> emango du. Zein mota den galdetzeko, <code>type()</code>:</p>
+<div class="kom"><pre data-run>print(type(16))
+print(type(1.75))
+print(type("Ane"))
+print(type(True))</pre></div>
+<h3>Zergatik axola duen motak</h3>
+<p>Bi zenbakiren artean <code>+</code> ikurrak batu egiten du; bi testuren artean, itsatsi. Nahastuz gero, errorea.</p>
+<div class="kom"><pre data-run>print(5 + 3)
+print("5" + "3")
+izena = "Igor"
+print(izena + 2)</pre></div>
+<div class="kutxa ohar"><b>Hamartarrekin kontu txiki bat:</b> ordenagailuek ez dituzte hamartarrak zehaztasun osoz gordetzen.
+<div class="kom"><pre data-run>print(0.1 + 0.2)</pre></div>Ez da zure akatsa. Emaitza txukun erakusteko <code>round()</code> erabiliko dugu (4. atala).</div>
+<div class="ex" data-s="2"></div>
+</div></section>
+
+<section class="leihoa" id="a3" data-c="3 · input / print" data-p="3-input-print"><div class="gorputza">
+<h2>3. Sarrera eta irteera: input eta print</h2>
+<p class="azpi">Programa erabilgarri batek erabiltzaileari galdetzen dio eta erantzunarekin lan egiten du.</p>
+<h3>Irteera: print() eta f-string</h3>
+<p>Testua eta aldagaiak asko nahasten dituzunean, f-stringa erosoagoa da: komatxoen aurretik <code>f</code> bat jarri eta aldagaiak giltzen artean sartu. Barruan eragiketak ere egin daitezke.</p>
+<div class="kom"><pre data-run>izena = "Ane"
+adina = 16
+print(f"{izena}k {adina} urte ditu")
+print(f"Hamar urte barru {adina + 10} izango ditu")</pre></div>
+<h3>Sarrera: input()</h3>
+<p><code>input()</code> funtzioak programa gelditu eta erabiltzaileak zerbait idatzi eta Enter sakatu arte itxaroten du. Parentesien arteko testua galdera da; ez ahaztu amaieran hutsune bat uztea.</p>
+<div class="kom"><pre data-run data-in="Ane">izena = input("Nola duzu izena? ")
+print("Kaixo,", izena)</pre></div>
+<div class="kutxa garrantzi"><b>Arau garrantzitsuena: <code>input()</code> beti testua da.</b> Erabiltzaileak 16 idazten badu ere, aldagaiak <code>"16"</code> dauka, ez <code>16</code>. Horregatik ezin da zuzenean kalkulurik egin: <code>TypeError</code>.</div>
+<h3>Bihurketa (casting)</h3>
+<div class="tb-wrap"><table><thead><tr><th>Funtzioa</th><th>Zertara bihurtzen du</th><th>Adibidea</th></tr></thead><tbody>
+<tr><td><code>int()</code></td><td>Osoko zenbakira</td><td><code>int("16")</code> → 16</td></tr>
+<tr><td><code>float()</code></td><td>Zenbaki hamartarrera</td><td><code>float("1.75")</code> → 1.75</td></tr>
+<tr><td><code>str()</code></td><td>Testura</td><td><code>str(16)</code> → "16"</td></tr></tbody></table></div>
+<div class="kom"><pre data-run data-in="16">adina = int(input("Zenbat urte dituzu? "))
+print("Datorren urtean", adina + 1, "izango dituzu")</pre></div>
+<p><code>int(input("..."))</code> barrutik kanpora irakurtzen da: 1) <code>input</code>-ek testua jasotzen du, 2) <code>int</code>-ek zenbaki bihurtzen du, 3) <code>=</code> ikurrak aldagaian gordetzen du. Hamartarrak behar badituzu, <code>float()</code>.</p>
+<h3>Adibide osoa</h3>
+<div class="kom"><pre data-run data-in="7|5">zenbakia1 = int(input("Sartu lehen zenbakia: "))
+zenbakia2 = int(input("Sartu bigarren zenbakia: "))
+emaitza = zenbakia1 + zenbakia2
+print(f"{zenbakia1} + {zenbakia2} = {emaitza}")</pre></div>
+<div class="ex" data-s="3"></div>
+</div></section>
+
+<section class="leihoa" id="a4" data-c="4 · Eragiketak" data-p="4-eragiketak"><div class="gorputza">
+<h2>4. Eragiketa matematikoak</h2>
+<p class="azpi">Pythonek kalkulagailu baten moduan funtzionatzen du.</p>
+<div class="tb-wrap"><table><thead><tr><th>Ikurra</th><th>Eragiketa</th><th>Adibidea</th><th>Emaitza</th></tr></thead><tbody>
+<tr><td><code>+</code></td><td>Batuketa</td><td><code>7 + 3</code></td><td>10</td></tr>
+<tr><td><code>-</code></td><td>Kenketa</td><td><code>7 - 3</code></td><td>4</td></tr>
+<tr><td><code>*</code></td><td>Biderketa</td><td><code>7 * 3</code></td><td>21</td></tr>
+<tr><td><code>/</code></td><td>Zatiketa</td><td><code>7 / 3</code></td><td>2.3333333333333335</td></tr>
+<tr><td><code>//</code></td><td>Zatiketa osoa</td><td><code>7 // 3</code></td><td>2</td></tr>
+<tr><td><code>%</code></td><td>Hondarra</td><td><code>7 % 3</code></td><td>1</td></tr>
+<tr><td><code>**</code></td><td>Berretura</td><td><code>7 ** 3</code></td><td>343</td></tr></tbody></table></div>
+<p><code>/</code> erabiltzen duzunean emaitza beti <code>float</code> da: <code>10 / 2</code> egiteak <code>5.0</code> ematen du. Osoko emaitza nahi baduzu, <code>//</code>.</p>
+<h3>// eta % : zatiketa osoa eta hondarra</h3>
+<p>17 gozoki 5 lagunen artean: <code>17 // 5 = 3</code> (bakoitzari 3) eta <code>17 % 5 = 2</code> (2 soberan); <code>3 × 5 + 2 = 17</code>. Zenbaki bat 2z zatitzean hondarra 0 bada, bikoitia da; 1 bada, bakoitia.</p>
+<div class="kom"><pre data-run>print(17 // 5)
+print(17 % 5)
+print(14 % 2)
+print(15 % 2)
+segundoak = 200
+print(f"{segundoak} segundo = {segundoak // 60} min eta {segundoak % 60} s")
+print(9 ** 0.5)</pre></div>
+<h3>Eragiketen ordena eta round()</h3>
+<p>Lehenengo parentesiak, gero berreturak, gero biderketak eta zatiketak, eta azkenik batuketak eta kenketak. Zalantzarik baduzu, jarri parentesiak. <code>round()</code>-en lehen balioa zenbakia da, eta bigarrena zenbat hamartar nahi dituzun.</p>
+<div class="kom"><pre data-run>print(2 + 3 * 4)
+print((2 + 3) * 4)
+emaitza = 10 / 3
+print(emaitza)
+print(round(emaitza, 2))
+print(round(emaitza))</pre></div>
+<h3>Eragiketak aldagaiekin</h3>
+<p>Benetako programetan aldagaiekin lan egiten da, horrela emaitzak gorde eta berrerabil baitaitezke.</p>
+<div class="kom"><pre data-run>prezioa = 20
+bez_tasa = 0.21
+bez_zenbatekoa = prezioa * bez_tasa
+guztira = prezioa + bez_zenbatekoa
+print("Oinarria:", prezioa)
+print("BEZa:", bez_zenbatekoa)
+print("Guztira:", guztira)</pre></div>
+<h3>Laburdura: +=</h3>
+<p>Aldagai bati zerbait gehitu nahi diozunean bi modu daude, eta biek gauza bera egiten dute. Berdin dabil <code>-=</code>, <code>*=</code> eta <code>/=</code> ere.</p>
+<div class="kom"><pre data-run>puntuak = 10
+puntuak = puntuak + 5  # modu luzea
+puntuak += 5           # laburdura
+print(puntuak)</pre></div>
+<div class="ex" data-s="4"></div>
+</div></section>
+
+<section class="leihoa" id="a5" data-c="5 · Konparazioak" data-p="5-konparazioak"><div class="gorputza">
+<h2>5. Konparazioak eta eragiketa logikoak</h2>
+<p class="azpi">Konparazio baten erantzuna beti da <code>True</code> edo <code>False</code>: <code>bool</code> mota.</p>
+<div class="tb-wrap"><table><thead><tr><th>Ikurra</th><th>Esanahia</th><th>Adibidea</th><th>Emaitza</th></tr></thead><tbody>
+<tr><td><code>==</code></td><td>Berdina da</td><td><code>5 == 5</code></td><td>True</td></tr>
+<tr><td><code>!=</code></td><td>Desberdina da</td><td><code>5 != 3</code></td><td>True</td></tr>
+<tr><td><code>&gt;</code></td><td>Handiagoa da</td><td><code>5 &gt; 3</code></td><td>True</td></tr>
+<tr><td><code>&lt;</code></td><td>Txikiagoa da</td><td><code>5 &lt; 3</code></td><td>False</td></tr>
+<tr><td><code>&gt;=</code></td><td>Handiagoa edo berdina</td><td><code>5 &gt;= 5</code></td><td>True</td></tr>
+<tr><td><code>&lt;=</code></td><td>Txikiagoa edo berdina</td><td><code>3 &lt;= 5</code></td><td>True</td></tr></tbody></table></div>
+<div class="kutxa garrantzi"><b><code>=</code> eta <code>==</code> ez dira gauza bera.</b> Ikur batek (<code>=</code>) gordetzen du: <code>adina = 16</code>. Bi ikurrek (<code>==</code>) galdetzen dute: <code>adina == 16</code> «16 da adina?». Hau da hasiberrien akatsik ohikoena.</div>
+<p>Testuak ere konparatu daitezke, eta larriak eta xeheak bereizten dira: <code>"Ane"</code> eta <code>"ane"</code> ez dira berdinak. Konparazio baten emaitza aldagai batean gorde daiteke.</p>
+<div class="kom"><pre data-run>adina = 16
+print(adina > 18)
+print(adina == 16)
+print(10 == "10")
+nagusia_da = adina >= 18
+print(nagusia_da)</pre></div>
+<h3>and, or, not</h3>
+<p><code>and</code> → ETA: bi baldintzak bete behar dira. <code>or</code> → EDO: bat betetzea nahikoa da. <code>not</code> → EZ: emaitza alderantzikatzen du. Hirurak letra xehez idazten dira.</p>
+<div class="tb-wrap"><table><thead><tr><th>A</th><th>B</th><th>A and B</th><th>A or B</th><th>not A</th></tr></thead><tbody>
+<tr><td>True</td><td>True</td><td>True</td><td>True</td><td>False</td></tr>
+<tr><td>True</td><td>False</td><td>False</td><td>True</td><td>False</td></tr>
+<tr><td>False</td><td>True</td><td>False</td><td>True</td><td>True</td></tr>
+<tr><td>False</td><td>False</td><td>False</td><td>False</td><td>True</td></tr></tbody></table></div>
+<p>Baldintza luze bat ikusten duzunean, ebaluatu zati bakoitza bere aldetik, eta gero konbinatu. Parentesiak erabiltzea komeni da.</p>
+<div class="kom"><pre data-run>adina = 17
+baimena = True
+sar_daiteke = (adina >= 18) or (adina >= 16 and baimena)
+print(sar_daiteke)</pre></div>
+<div class="kutxa ohar"><b>Konparazio bakoitzak bere aldagaia behar du.</b> Pythonen <code>adina &gt; 18 and adina &lt; 65</code> idazten da; <code>adina &gt; 18 and &lt; 65</code> errorea da.</div>
+<div class="ex" data-s="5"></div>
+</div></section>
+
+<section class="leihoa" id="a6" data-c="6 · Baldintzak" data-p="6-baldintzak"><div class="gorputza">
+<h2>6. Baldintzak: if, elif, else</h2>
+<p class="azpi">Programek egoeraren arabera jokatu behar dute.</p>
+<p>Bi gauza dira ezinbestekoak: baldintzaren ondoren bi puntu (<code>:</code>), eta hurrengo lerroa koskatuta. Baldintza <code>True</code> bada, barruko kodea exekutatzen da; <code>False</code> bada, saltatu egiten da eta programak aurrera jarraitzen du.</p>
+<div class="kom"><pre data-run>adina = 20
+if adina >= 18:
+    print("Nagusia zara")
+print("Programa amaitu da")</pre></div>
+<div class="kutxa aholku"><b>Koska: Pythonen arau nagusia.</b> Pythonen ezkerreko hutsuneek erabakitzen dute zer dagoen <code>if</code> baten barruan eta zer ez. Erabili beti <b>4 hutsune</b> (VS Codek Tab teklarekin egiten du). Blokeko lerro guztiek koska bera izan behar dute, bestela <code>IndentationError</code>. Bi puntuak ahazten badira, <code>SyntaxError</code>.</div>
+<h3>else eta elif</h3>
+<p><code>else</code>-k ez du baldintzarik: gainerako kasu guztietarako da. Beti bata edo bestea exekutatzen da, inoiz ez biak. Bi aukera baino gehiago badaude, <code>elif</code> erabiltzen da; nahi adina jar daitezke.</p>
+<div class="kom"><pre data-run>nota = 7
+if nota < 5:
+    print("Gutxiegi")
+elif nota < 7:
+    print("Nahikoa")
+elif nota < 9:
+    print("Ondo")
+else:
+    print("Bikain")</pre></div>
+<p>Pythonek baldintzak ordenan aztertzen ditu, lehenengotik hasita. Bat betetzen duenean, bere blokea exekutatu eta gainerako guztiak saltatzen ditu. Ordena garrantzitsua da: okerreko ordenan jarrita, emaitza okerra izan daiteke.</p>
+<h3>Baldintza konbinatuak eta if barruko if</h3>
+<p>if bat beste if baten barruan jar daiteke; koska bikoiztu egiten da, 8 hutsunera. Askotan <code>and</code> erabiliz sinplifikatu daiteke, baina barruko if-ak mezu zehatzagoak ematen ditu.</p>
+<div class="kom"><pre data-run>adina = 20
+txartela = False
+if adina >= 18:
+    if txartela:
+        print("Sartu zaitezke")
+    else:
+        print("Txartela falta zaizu")
+else:
+    print("Adinez ez duzu sartzerik")</pre></div>
+<div class="ex" data-s="6"></div>
+</div></section>
+
+<section class="leihoa" id="a7" data-c="7 · match-case" data-p="7-match-case"><div class="gorputza">
+<h2>7. match-case: Pythoneko «switch»</h2>
+<p class="azpi">Balio bat balio zehatz askorekin alderatu behar duzunean.</p>
+<p>Pythonek aldagaiaren balioa begiratzen du eta bat datorren <code>case</code>-a bakarrik exekutatzen du. Koska bikoitza: <code>case</code> lerroak <code>match</code>-etik 4 hutsunera daude, eta ekintzak <code>case</code>-tik beste 4ra. <code>case _</code> «beste edozer» da, <code>else</code>-ren parekoa, eta beti azkenean jartzen da. Barra bertikalak (<code>|</code>) hainbat balio elkartzen ditu («edo»).</p>
+<div class="kom"><pre data-run>eguna = 6
+match eguna:
+    case 1:
+        print("Astelehena")
+    case 6 | 7:
+        print("Asteburua")
+    case _:
+        print("Egun ezezaguna")</pre></div>
+<p>Testuekin ere balio du:</p>
+<div class="kom"><pre data-run data-in="horia">kolorea = input("Zein kolore? ")
+match kolorea:
+    case "gorria":
+        print("Gelditu")
+    case "horia":
+        print("Kontuz")
+    case "berdea":
+        print("Aurrera")
+    case _:
+        print("Kolore hori ez dut ezagutzen")</pre></div>
+<div class="tb-wrap"><table><thead><tr><th>Erabili match-case</th><th>Erabili if / elif</th></tr></thead><tbody>
+<tr><td>Balio zehatzak konparatzean</td><td>Tarteak konparatzean (<code>nota &lt; 5</code>)</td></tr>
+<tr><td>Menu bat programatzean</td><td><code>and</code>, <code>or</code> edo <code>not</code> behar duzunean</td></tr>
+<tr><td>Aukera finko asko daudenean</td><td>Bi aukera bakarrik daudenean</td></tr></tbody></table></div>
+<div class="kutxa ohar"><b>Bertsioaren baldintza:</b> <code>match-case</code> Python 3.10 bertsiotik aurrera bakarrik dago; zaharragoa bada, <code>SyntaxError</code>. Egitura bera <code>if-elif-else</code> erabiliz idatz dezakezu: emaitza berdina da.</div>
+<div class="ex" data-s="7"></div>
+</div></section>
+
+<section class="leihoa" id="a8" data-c="8 · while" data-p="8-while"><div class="gorputza">
+<h2>8. Begiztak: while</h2>
+<p class="azpi">Begizta batek kode zati bat errepikatzen du.</p>
+<p><code>while</code>-ek ordenagailuari esaten dio: «errepikatu kode hau baldintza egia den bitartean». Baldintza exekuzio bakoitzaren AURRETIK begiratzen du; gezurra bihurtzen denean, begizta amaitu eta programak aurrera jarraitzen du. <code>if</code>-ek behin bakarrik begiratzen du; <code>while</code>-ek behin eta berriz.</p>
+<div class="kom"><pre data-run>zenbakia = 1
+while zenbakia <= 5:
+    print(zenbakia)
+    zenbakia += 1
+print("Amaitu da")</pre></div>
+<div class="kutxa garrantzi"><b>Begizta orok hiru zati ditu:</b> 1) HASIERAKETA (<code>zenbakia = 1</code>, begizta baino lehen), 2) BALDINTZA (<code>while zenbakia &lt;= 5:</code>), 3) ALDAKETA (<code>zenbakia += 1</code>, begizta barruan). Hasieraketa gabe, <code>NameError</code>. Aldaketa gabe, baldintza beti <code>True</code> izango da: begizta amaigabea (gertatzen bazaizu, <kbd>Ctrl</kbd> + <kbd>C</kbd> terminalean). Aldaketak baldintzatik hurbildu behar du, ez urrundu.</div>
+<div class="kom"><pre data-run>kontagailua = 5
+while kontagailua > 0:
+    print(kontagailua)
+    kontagailua -= 1
+print("Hasi!")</pre></div>
+<h3>Erabiltzailearekin eta break</h3>
+<p>Begiztak oso erabilgarriak dira erabiltzaileak zerbait ondo egin arte eskatzeko. Hasierako balioa (<code>""</code>) garrantzitsua da: <code>while</code>-ek aldagaia existitzea behar du lehen aldiz begiratzeko.</p>
+<div class="kom"><pre data-run data-in="1111|abcd|1234">pasahitza = ""
+while pasahitza != "1234":
+    pasahitza = input("Sartu pasahitza: ")
+print("Sarbidea onartuta")</pre></div>
+<p><code>break</code> aginduak begizta berehala gelditzen du. <code>while True</code> beti egia denez, begizta berez amaigabea da, eta barruan <code>if</code> batek <code>break</code> egiten du irteteko unea iristen denean.</p>
+<div class="kom"><pre data-run data-in="4|10|0">while True:
+    zenbakia = int(input("Zenbaki bat (0 irteteko): "))
+    if zenbakia == 0:
+        break
+    print("Bikoitza:", zenbakia * 2)
+print("Agur")</pre></div>
+<div class="tb-wrap"><table><thead><tr><th>Egitura</th><th>Noiz begiratzen du baldintza</th><th>Gutxienez zenbat aldiz</th></tr></thead><tbody>
+<tr><td><code>while</code></td><td>Hasieran, exekutatu aurretik</td><td>0 aldiz</td></tr>
+<tr><td>do-while (beste lengoaietan)</td><td>Amaieran, exekutatu ondoren</td><td>1 aldiz</td></tr>
+<tr><td><code>while True</code> + <code>break</code></td><td>Barruan, zuk nahi duzun tokian</td><td>1 aldiz</td></tr></tbody></table></div>
+<p>Pythonek ez dauka do-while, baina <code>while True</code> eta <code>break</code> erabiliz berdin-berdin lortzen da.</p>
+<div class="ex" data-s="8"></div>
+</div></section>
+
+<section class="leihoa" id="a9" data-c="9 · Metagailuak" data-p="9-akumulatzailea"><div class="gorputza">
+<h2>9. Akumulatzailea eta kontagailua</h2>
+<p class="azpi">Itxura berdina dute, baina ez dute gauza bera egiten.</p>
+<div class="tb-wrap"><table><thead><tr><th>Tresna</th><th>Zertarako</th><th>Nola handitzen den</th></tr></thead><tbody>
+<tr><td>Akumulatzailea</td><td>Balioak metatzeko (batura)</td><td><code>guztira += balioa</code></td></tr>
+<tr><td>Kontagailua</td><td>Zenbat aldiz gertatu den kontatzeko</td><td><code>kontagailua += 1</code></td></tr></tbody></table></div>
+<p>Akumulatzailea aurrezki-kutxa bat bezalakoa da: hasieran hutsik dago (0), eta dirua sartzen duzun bakoitzean kopurua handitzen da. Hiru urrats ditu beti: 0an hasieratu, begiztan gehitu, eta amaieran erabili. Begiztan, kontagailuak begizta kontrolatzen du eta akumulatzaileak emaitza metatzen du.</p>
+<div class="kom"><pre data-run data-in="4|7|2|9|3">guztira = 0
+kontagailua = 0
+while kontagailua < 5:
+    zenbakia = int(input("Sartu zenbaki bat: "))
+    guztira += zenbakia
+    kontagailua += 1
+print("Batura:", guztira)</pre></div>
+<h3>Batez bestekoa eta kontagailua baldintzarekin</h3>
+<p>Batez bestekoa batura zati kopurua da. Kontuz: kopurua 0 bada, <code>ZeroDivisionError</code>; horregatik egiaztatzen da zatitu aurretik.</p>
+<div class="kom"><pre data-run data-in="6|7.5|8">guztira = 0
+kopurua = 0
+while kopurua < 3:
+    nota = float(input("Sartu nota: "))
+    guztira += nota
+    kopurua += 1
+if kopurua > 0:
+    print("Batez bestekoa:", round(guztira / kopurua, 2))</pre></div>
+<p>Askotan baldintza bat betetzen dutenak bakarrik kontatu nahi dira. Ohartu koskan: <code>positiboak += 1</code> <code>if</code>-aren barruan dago, baina <code>kontagailua += 1</code> kanpoan; barruan jarriz gero, begizta ez litzateke inoiz amaituko zenbaki negatiboekin.</p>
+<div class="kom"><pre data-run data-in="4|-2|7|0|-5">positiboak = 0
+kontagailua = 0
+while kontagailua < 5:
+    zenbakia = int(input("Zenbakia: "))
+    if zenbakia > 0:
+        positiboak += 1
+    kontagailua += 1
+print("Positiboak:", positiboak)</pre></div>
+<p>«Irten arte» begizta: ez duzu beti zenbat aldiz jakin behar; balio berezi batekin amai daiteke.</p>
+<div class="kom"><pre data-run data-in="10|25.5|4.5|0">guztira = 0
+while True:
+    kopurua = float(input("Sartu kopurua (0 amaitzeko): "))
+    if kopurua == 0:
+        break
+    guztira += kopurua
+print("Aurreztutakoa:", guztira)</pre></div>
+<div class="ex" data-s="9"></div>
+</div></section>
+
+<section class="leihoa" id="a10" data-c="10 · Funtzioak" data-p="10-funtzioak"><div class="gorputza">
+<h2>10. Funtzioak</h2>
+<p class="azpi">Funtzio bat izena duen kode multzo bat da, nahi duzunean exekutatu dezakezuna.</p>
+<p>Programak hazten direnean, kode bera behin baino gehiagotan errepikatzen da, eta fitxategia luzeegia bihurtzen da. Funtzioek hori konpontzen dute. Kafe-makina bat bezalakoak dira: botoia sakatu (funtzioari deitu) eta beti gauza bera egiten du. Dagoeneko erabili dituzu: <code>print()</code>, <code>input()</code>, <code>int()</code>, <code>round()</code> eta <code>type()</code>.</p>
+<h3>Sortzea eta deitzea</h3>
+<p>Hiru zati: <code>def</code> hitza, funtzioaren izena parentesiekin, eta bi puntu. Barruko kodea koskatuta doa. Definitzea ez da exekutatzea: exekutatzeko deitu egin behar zaio, izena eta parentesiak idatzita.</p>
+<div class="kom"><pre data-run>def agurra():
+    print("Kaixo!")
+    print("Ongi etorri programara")
+
+agurra()
+agurra()</pre></div>
+<h3>Parametroak</h3>
+<p>Funtzio batek kanpotik datuak jaso ditzake. Parentesien artean jartzen dira, eta parametro deitzen zaie. Balioak definitutako ordena berean jaso behar dira, eta kopuruak bat etorri behar du; bestela, <code>TypeError</code>.</p>
+<div class="kom"><pre data-run>def agurra(izena):
+    print(f"Kaixo, {izena}!")
+
+def aurkeztu(izena, adina, herria):
+    print(f"{izena}, {adina} urte, {herria}")
+
+agurra("Ane")
+aurkeztu("Jon", 17, "Galdakao")</pre></div>
+<h3>return: emaitza itzultzea</h3>
+<div class="kutxa garrantzi"><b><code>return</code> eta <code>print</code> ez dira gauza bera.</b> <code>print()</code>-ek pantailan idazten du; programak ezin du gero erabili. <code>return</code>-ek balioa itzultzen du: pantailan ez da ezer agertzen, baina balioa gorde eta erabil dezakezu. Araua: funtzioak kalkulatzen badu, <code>return</code>; erakusten badu, <code>print</code>. <code>return</code> exekutatzean funtzioa bertan behera gelditzen da.</div>
+<div class="kom"><pre data-run>def batu_print(a, b):
+    print(a + b)
+
+def batu_return(a, b):
+    return a + b
+
+x = batu_print(2, 3)
+y = batu_return(2, 3)
+print("x =", x)
+print("y =", y)</pre></div>
+<p>Lehenengoak 5 idatzi du, baina ez du ezer itzuli: horregatik <code>x</code>-ek <code>None</code> dauka. Bigarrenak balioa itzuli du eta <code>y</code>-n gorde da.</p>
+<div class="kom"><pre data-run>def bez_kalkulatu(prezioa, tasa):
+    return prezioa + (prezioa * tasa)
+
+def tiketa_erakutsi(produktua, prezioa):
+    guztira = bez_kalkulatu(prezioa, 0.21)
+    print(f"{produktua}: {round(guztira, 2)} euro (BEZa barne)")
+
+tiketa_erakutsi("Koadernoa", 4.5)
+tiketa_erakutsi("Motxila", 24.9)</pre></div>
+<div class="kutxa ohar"><b>Funtzio barruko aldagaiak</b> funtzio horretakoak dira bakarrik; kanpotik erabiltzen saiatuz gero, <code>NameError</code>. Balio bat kanpora atera nahi baduzu, <code>return</code>. Funtzioak erabili aurretik definitu behar dira: ohitura ona da funtzio guztiak fitxategiaren goialdean jartzea eta programa nagusia azpian.</div>
+<div class="ex" data-s="10"></div>
+</div></section>
+
+<section class="leihoa" id="a11" data-c="Errore-mezuak" data-p="11-laburpena"><div class="gorputza">
+<h2>Errore-mezuak: laburpen-fitxa</h2>
+<div class="tb-wrap"><table><thead><tr><th>Errore-mota</th><th>Zer esan nahi du</th><th>Zer begiratu</th></tr></thead><tbody>
+<tr><td><code>SyntaxError</code></td><td>Lerroa gaizki idatzita dago.</td><td>Bi puntuak (:), parentesiak eta komatxoak itxita daude?</td></tr>
+<tr><td><code>IndentationError</code></td><td>Koska gaizki dago.</td><td>Barruko lerroek 4 hutsune behar dituzte.</td></tr>
+<tr><td><code>NameError</code></td><td>Izen hori ez du ezagutzen.</td><td>Aldagaia sortu duzu lehenago? Berdin idatzi duzu?</td></tr>
+<tr><td><code>TypeError</code></td><td>Bi datu mota bateraezin nahastu dituzu.</td><td>Testua eta zenbakia batzen? Erabili <code>str()</code> edo <code>int()</code>.</td></tr>
+<tr><td><code>ValueError</code></td><td>Balioa ez da egokia eragiketa horretarako.</td><td><code>int("kaixo")</code> egiten saiatu zara?</td></tr>
+<tr><td><code>ZeroDivisionError</code></td><td>Zeroz zatitu duzu.</td><td>Zatitzailea 0 izan daiteke? Egiaztatu lehenago.</td></tr></tbody></table></div>
+<div class="kutxa aholku"><b>Hiru arau ahazten errazenak:</b> bi puntuak (<code>:</code>) <code>if</code>, <code>elif</code>, <code>else</code>, <code>while</code>, <code>match</code>, <code>case</code> eta <code>def</code> lerroen amaieran · koska: 4 hutsune blokeko lerro guztietan · <code>input()</code> beti testua da: <code>int()</code> edo <code>float()</code> erabili kalkulatu aurretik.</div>
+<h3>Test azkarra</h3>
+<div id="quiz"></div>
+<div class="em arg on" id="quizEm">Erantzun galdera guztiei.</div>
+</div></section>
+</main>
+<footer><div class="container">Python programazioa · MSS1 · Harrobia Ikastola Integratua. Edukia: «Python programazioa» gida (Harrobia Ikastola).</div></footer>
+
+<script>
+(function(){"use strict";
+var PYH="import sys, io, json, builtins\ndef __run(code, ins):\n    ins = json.loads(ins)\n    out = io.StringIO()\n    it = iter(ins)\n    def fake_input(prompt=''):\n        out.write(str(prompt))\n        try:\n            v = next(it)\n        except StopIteration:\n            raise EOFError('input() gehiegi: ez dago sarrera gehiagorik')\n        out.write(v + '\\n')\n        return v\n    cnt = [0]\n    def tracer(frame, event, arg):\n        if event == 'line':\n            cnt[0] += 1\n            if cnt[0] > 300000:\n                raise TimeoutError('Begizta amaigabea? Programak denbora gehiegi darama')\n        return tracer\n    g = {'__name__': '__main__', '__builtins__': builtins}\n    g['input'] = fake_input\n    old = sys.stdout\n    sys.stdout = out\n    err = None\n    try:\n        sys.settrace(tracer)\n        exec(compile(code, 'programa.py', 'exec'), g)\n    except SystemExit:\n        pass\n    except BaseException as e:\n        sys.settrace(None)\n        ln = None\n        if isinstance(e, SyntaxError):\n            ln = e.lineno\n            msg = e.msg\n        else:\n            msg = str(e)\n            tb = e.__traceback__\n            while tb:\n                if tb.tb_frame.f_code.co_filename == 'programa.py':\n                    ln = tb.tb_lineno\n                tb = tb.tb_next\n        err = type(e).__name__ + ': ' + msg\n        if ln:\n            err = str(ln) + '. lerroa · ' + err\n    finally:\n        sys.settrace(None)\n        sys.stdout = old\n    return json.dumps([out.getvalue(), err])\n", EX=[["e1", 1, "Nire fitxa", "Sortu lau aldagai (izena, abizena, adina, herria) eta erakutsi bakoitza bere lerroan, testu batekin lagunduta. Adibidez: <code>Izena: Ane</code>.", "# Sortu lau aldagaiak hemen\n", "Testua komatxoen artean; adina zenbakia da, komatxorik gabe.", [{"i": [], "re": "^Izena: .+\\nAbizena: .+\\nAdina: .+\\nHerria: .+\\s*$"}]], ["e2", 1, "Trukea", "<code>a = 5</code> eta <code>b = 12</code> dira. Trukatu balioak eta erakutsi biak aurretik eta ondoren, hau idatziz: <code>Hasieran: a = 5 eta b = 12</code> / <code>Amaieran: a = 12 eta b = 5</code>.", "a = 5\nb = 12\n", "a = b egiten baduzu zuzenean, 5 betirako galtzen da. Hirugarren aldagai bat behar duzu.", [{"i": [], "o": "Hasieran: a = 5 eta b = 12\nAmaieran: a = 12 eta b = 5"}]], ["e3", 2, "Zein mota da?", "Sortu <code>x = 7.0</code> eta <code>y = \"7\"</code>. Erakutsi lehenengo x-ren mota eta gero y-renarena, <code>type()</code> erabiliz.", "x = 7.0\ny = \"7\"\n", "print(type(...))", [{"i": [], "o": "<class 'float'>\n<class 'str'>"}]], ["e4", 3, "Aurkezpena", "Galdetu izena (<code>Nola duzu izena? </code>), adina (<code>Zenbat urte dituzu? </code>) eta herria (<code>Non bizi zara? </code>). Erakutsi: <code>Jon Galdakaon bizi da eta 16 urte ditu.</code> eta <code>Hamar urte barru 26 izango ditu.</code> (herriari <code>n</code> gehitu).", "", "Adinarekin kalkulatu behar duzunez, int() behar duzu.", [{"i": ["Jon", "16", "Galdakao"], "o": "Nola duzu izena? Jon\nZenbat urte dituzu? 16\nNon bizi zara? Galdakao\nJon Galdakaon bizi da eta 16 urte ditu.\nHamar urte barru 26 izango ditu."}, {"i": ["Ane", "15", "Bilbo"], "o": "Nola duzu izena? Ane\nZenbat urte dituzu? 15\nNon bizi zara? Bilbo\nAne Bilbon bizi da eta 15 urte ditu.\nHamar urte barru 25 izango ditu."}]], ["e5", 3, "Kalkulagailu txikia", "Eskatu bi zenbaki oso (<code>Sartu lehen zenbakia: </code> eta <code>Sartu bigarren zenbakia: </code>) eta erakutsi lau eragiketak, osorik: <code>10 + 4 = 14</code>, <code>10 - 4 = 6</code>, <code>10 * 4 = 40</code>, <code>10 / 4 = 2.5</code>.", "", "f-string barruan aldagaiak eta eragiketa biak jar daitezke.", [{"i": ["10", "4"], "o": "Sartu lehen zenbakia: 10\nSartu bigarren zenbakia: 4\n10 + 4 = 14\n10 - 4 = 6\n10 * 4 = 40\n10 / 4 = 2.5"}, {"i": ["7", "2"], "o": "Sartu lehen zenbakia: 7\nSartu bigarren zenbakia: 2\n7 + 2 = 9\n7 - 2 = 5\n7 * 2 = 14\n7 / 2 = 3.5"}]], ["e6", 4, "Zirkuluaren azalera", "Eskatu erradioa (<code>Sartu erradioa: </code>, float). Kalkulatu azalera (<code>3.1416 * erradioa ** 2</code>) eta perimetroa (<code>2 * 3.1416 * erradioa</code>) eta erakutsi bi hamartarrekin: <code>Azalera: 28.27</code>, <code>Perimetroa: 18.85</code>.", "", "round(zenbakia, 2)", [{"i": ["3"], "o": "Sartu erradioa: 3\nAzalera: 28.27\nPerimetroa: 18.85"}, {"i": ["2"], "o": "Sartu erradioa: 2\nAzalera: 12.57\nPerimetroa: 12.57"}]], ["e7", 4, "Segundoetatik ordutara", "Eskatu segundo kopuru bat (<code>Sartu segundoak: </code>) eta erakutsi, adibidez: <code>7265 segundo = 2 ordu, 1 min eta 5 s</code>.", "", "Ordu batek 3600 segundo ditu. // orduak lortzeko eta % gainerakoarekin jarraitzeko.", [{"i": ["7265"], "o": "Sartu segundoak: 7265\n7265 segundo = 2 ordu, 1 min eta 5 s"}, {"i": ["200"], "o": "Sartu segundoak: 200\n200 segundo = 0 ordu, 3 min eta 20 s"}]], ["e8", 4, "Hiru noten batez bestekoa", "Eskatu hiru nota (hamartarrak izan daitezke) eta erakutsi batez bestekoa bi hamartarrekin.", "", "Parentesiak ezinbestekoak dira: (n1 + n2 + n3) / 3", [{"i": ["6", "7.5", "8"], "re": "7\\.17\\s*$"}, {"i": ["5", "5", "5"], "re": "5\\.0\\s*$"}]], ["e9", 5, "Sarbide-txartela", "Eskatu adina (<code>Zenbat urte dituzu? </code>) eta txartela (<code>Baduzu txartela? (bai/ez) </code>). Boolear batean kalkulatu: 18 urte edo gehiago ETA txartela. Erakutsi <code>Sar daiteke: True</code>.", "", "txartela_du = (erantzuna == \"bai\")", [{"i": ["20", "bai"], "o": "Zenbat urte dituzu? 20\nBaduzu txartela? (bai/ez) bai\nSar daiteke: True"}, {"i": ["20", "ez"], "o": "Zenbat urte dituzu? 20\nBaduzu txartela? (bai/ez) ez\nSar daiteke: False"}, {"i": ["17", "bai"], "o": "Zenbat urte dituzu? 17\nBaduzu txartela? (bai/ez) bai\nSar daiteke: False"}]], ["e10", 5, "Bikoitia da?", "Eskatu zenbaki oso bat (<code>Sartu zenbaki bat: </code>) eta erakutsi boolear batean bikoitia den: <code>14 bikoitia da: True</code>.", "", "Bikoitia da 2z zatitzean hondarra 0 bada.", [{"i": ["14"], "o": "Sartu zenbaki bat: 14\n14 bikoitia da: True"}, {"i": ["15"], "o": "Sartu zenbaki bat: 15\n15 bikoitia da: False"}]], ["e11", 6, "Nagusia ala adingabea", "Eskatu adina (<code>Zenbat urte dituzu? </code>). 18 edo gehiago bada: <code>Nagusia zara.</code> eta zenbat urte dituen. Bestela: <code>Adingabea zara.</code> eta zenbat urte falta zaizkion. Adibidez: <code>Adingabea zara. 3 urte falta zaizkizu.</code>", "", "if / else, eta 18 - adina", [{"i": ["15"], "re": "Adingabea zara\\..*3 urte falta"}, {"i": ["20"], "re": "Nagusia zara\\..*20"}]], ["e12", 6, "Kalifikazioa", "Eskatu nota (<code>Sartu nota: </code>, float) eta erakutsi: &lt;5 Gutxiegi; 5-6 Nahikoa; 6-7 Ondo; 7-9 Oso ondo; 9 edo gehiago Bikain. Adibidez: <code>8.5 --&gt; Oso ondo</code>.", "", "Txikienetik handienera jarri eta ez errepikatu baldintzak.", [{"i": ["8.5"], "o": "Sartu nota: 8.5\n8.5 --> Oso ondo"}, {"i": ["4"], "o": "Sartu nota: 4\n4.0 --> Gutxiegi"}, {"i": ["5"], "o": "Sartu nota: 5\n5.0 --> Nahikoa"}, {"i": ["6.5"], "o": "Sartu nota: 6.5\n6.5 --> Ondo"}, {"i": ["9"], "o": "Sartu nota: 9\n9.0 --> Bikain"}]], ["e13", 7, "Asteko egunak", "Eskatu eguna (<code>Sartu eguna (1-7): </code>) eta erakutsi asteko eguna (Astelehena... Igandea) <b>match-case</b> erabiliz. Tartetik kanpo badago, abisatu.", "", "case _ beti azkenean doa.", [{"i": ["5"], "o": "Sartu eguna (1-7): 5\nOstirala"}, {"i": ["7"], "o": "Sartu eguna (1-7): 7\nIgandea"}, {"i": ["9"], "re": "^Sartu eguna \\(1-7\\): 9\\n\\S"}]], ["e14", 8, "Pasahitza saiakera-kontagailuarekin", "Eskatu pasahitza (<code>Sartu pasahitza: </code>) <code>euskadi</code> idatzi arte. Kontatu saiakerak eta amaieran erakutsi: <code>Ondo! 3 saiakera behar izan dituzu.</code>", "", "Hasierako pasahitza = \"\" eta kontagailua 0tik hasi, begizta barruan += 1.", [{"i": ["kaixo", "bilbo", "euskadi"], "o": "Sartu pasahitza: kaixo\nSartu pasahitza: bilbo\nSartu pasahitza: euskadi\nOndo! 3 saiakera behar izan dituzu."}, {"i": ["euskadi"], "o": "Sartu pasahitza: euskadi\nOndo! 1 saiakera behar izan dituzu."}]], ["e15", 8, "Menu errepikakorra", "Menu bat hiru aukerarekin: 1 Agurtu (<code>Kaixo!</code>), 2 Data esan, 3 Irten. Menua behin eta berriz erakutsi 3 aukeratu arte (<b>while True</b>, <b>match-case</b>, <b>break</b>). Aukera okerra bada, abisatu.", "", "break case 3 barruan jartzen da.", [{"i": ["1", "3"], "re": "Kaixo!"}, {"i": ["3"], "re": "1\\W+Agurtu"}, {"i": ["9", "3"], "re": "Aukeratu: 9\\n(?!1\\W+Agurtu)\\S"}]], ["e16", 9, "Noten batez bestekoa", "Galdetu zenbat nota (<code>Zenbat nota? </code>), eskatu banan-banan (<code>Nota: </code>, float) eta erakutsi <code>Batura: 27.5</code> eta <code>Batez bestekoa: 6.88</code>. Kopurua 0 bada, ez zatitu.", "", "Lehen input-ak begiztaren baldintza ezartzen du.", [{"i": ["4", "5", "7", "6.5", "9"], "o": "Zenbat nota? 4\nNota: 5\nNota: 7\nNota: 6.5\nNota: 9\nBatura: 27.5\nBatez bestekoa: 6.88"}, {"i": ["0"], "re": "Batura: 0"}]], ["e17", 9, "Aurrezki-kutxa", "Eskatu kopuruak (<code>Kopurua (0 amaitzeko): </code>, float) 0 idatzi arte. Metatu eta kontatu sarrerak: <code>2 sarrera egin dituzu.</code> eta <code>Guztira: 35.5 euro</code>.", "", "break metaketaren AURRETIK doa: 0 ez da kontatzen.", [{"i": ["20", "15.5", "0"], "o": "Kopurua (0 amaitzeko): 20\nKopurua (0 amaitzeko): 15.5\nKopurua (0 amaitzeko): 0\n2 sarrera egin dituzu.\nGuztira: 35.5 euro"}]], ["e18", 9, "Positiboak eta negatiboak", "Eskatu 6 zenbaki oso. Kontatu zenbat positibo eta zenbat negatibo (0 ez da ez bata ez bestea) eta kalkulatu positiboen batura. Erakutsi: <code>Positiboak: 3</code>, <code>Negatiboak: 2</code>, <code>Positiboen batura: 14</code>.", "", "Hiru metagailu eta kontagailu bat begizta kontrolatzeko.", [{"i": ["4", "-2", "7", "0", "-5", "3"], "re": "Positiboak: 3\\nNegatiboak: 2\\nPositiboen batura: 14\\s*$"}, {"i": ["0", "0", "0", "1", "1", "-1"], "re": "Positiboak: 2\\nNegatiboak: 1\\nPositiboen batura: 2\\s*$"}]], ["e19", 10, "Kalkuluak itzultzen", "Idatzi <code>return</code> erabiliz: <code>bikoitza(zenbakia)</code>, <code>azalera(oinarria, altuera)</code> eta <code>bez_gehitu(prezioa)</code> (prezioari % 21 gehitu). Ez erabili print funtzioen barruan.", "# Idatzi hiru funtzioak hemen\n", "Funtzioak kalkulatzen badu, return.", [{"i": [], "post": "print(bikoitza(7))\nprint(azalera(4, 5))\nprint(round(bez_gehitu(100), 2))", "o": "14\n20\n121.0"}]], ["e20", 10, "Funtzioak eta baldintzak", "Idatzi: <code>bikoitia_da(zenbakia)</code> (True/False), <code>handiena(a, b)</code> (bietatik handiena) eta <code>kalifikazioa(nota)</code> (12. ariketako testua itzultzen du).", "", "Funtzio baten barruan if eta return elkarrekin erabil daitezke.", [{"i": [], "post": "print(bikoitia_da(8))\nprint(bikoitia_da(7))\nprint(handiena(12, 5))\nprint(handiena(3, 9))\nprint(kalifikazioa(4))\nprint(kalifikazioa(8.5))\nprint(kalifikazioa(9))", "o": "True\nFalse\n12\n9\nGutxiegi\nOso ondo\nBikain"}]]], QZ=[["<code>input()</code>-ek itzultzen duen balioa zein motatakoa da beti?", ["<code>int</code>", "<code>str</code>", "<code>float</code>", "<code>bool</code>"], 1, "<code>input()</code> beti testua da; kalkulatzeko <code>int()</code> edo <code>float()</code> erabili."], ["Zer idazten du <code>print(\"5\" + \"3\")</code>-k?", ["8", "53", "Errorea", "5 3"], 1, "Bi testuren artean <code>+</code>-ek itsatsi egiten du."], ["Zein da <code>17 // 5</code> eta <code>17 % 5</code>?", ["3 eta 2", "2 eta 3", "3.4 eta 0", "5 eta 17"], 0, "<code>//</code> zatiketa osoa da (3) eta <code>%</code> hondarra (2)."], ["Zein idazkera da zuzena adina 18 den galdetzeko?", ["<code>adina = 18</code>", "<code>adina == 18</code>", "<code>adina := 18</code>", "<code>adina =! 18</code>"], 1, "<code>=</code> gordetzeko da; <code>==</code> galdetzeko."], ["Zenbat hutsunerekin koskatzen da blokea?", ["1", "2", "4", "8 beti"], 2, "Erabili beti 4 hutsune, blokeko lerro guztietan."], ["<code>while</code> begizta orok hiru zati ditu: hasieraketa, baldintza eta...", ["aldaketa", "irteera", "funtzioa", "iruzkina"], 0, "Aldaketarik gabe, baldintza beti <code>True</code> izango da: begizta amaigabea."], ["Funtzio batek kalkulatu eta emaitza gero erabili behar bada, zer erabili?", ["<code>print</code>", "<code>input</code>", "<code>return</code>", "<code>round</code>"], 2, "Funtzioak kalkulatzen badu, <code>return</code>; erakusten badu, <code>print</code>."], ["Zein Python bertsiotik aurrera dago <code>match-case</code>?", ["3.6", "3.8", "3.10", "Beti egon da"], 2, "Zaharragoa bada, <code>SyntaxError</code>."], ["Zer ematen du <code>10 / 2</code>-k?", ["5", "5.0", "2", "Errorea"], 1, "<code>/</code> erabiltzean emaitza beti <code>float</code> da."], ["Nola amaitzen da <code>while True</code> begizta bat?", ["<code>stop</code>", "<code>exit</code>", "<code>break</code>", "Ezin da"], 2, "<code>if</code> baten barruan <code>break</code> jarrita."], ["Funtzio baten barruan sortutako aldagaia kanpotik erabiltzen saiatzen bazara...", ["<code>NameError</code>", "<code>ValueError</code>", "<code>ZeroDivisionError</code>", "Ez da ezer gertatzen"], 0, "Aldagaia funtzio horretakoa da bakarrik."], ["Zein da zuzena boolearra idazteko?", ["<code>true</code>", "<code>TRUE</code>", "<code>True</code>", "<code>\"True\"</code> (mota bool)"], 2, "<code>True</code> eta <code>False</code>, letra larriz hasita."]];
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function norm(s){return s.split("\n").map(function(l){return l.replace(/\s+$/,"")}).join("\n").replace(/\n+$/,"")}
+var py=null,loading=null;
+function load(){
+  if(py)return Promise.resolve(py);
+  if(loading)return loading;
+  loading=new Promise(function(res,rej){
+    var s=document.createElement("script");
+    s.src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js";
+    s.onload=function(){loadPyodide().then(function(p){p.runPython(PYH);py=p;res(p)}).catch(rej)};
+    s.onerror=function(){rej(new Error("Ezin izan da Python kargatu. Egiaztatu Interneterako konexioa."))};
+    document.head.appendChild(s);
+  });
+  loading.catch(function(){loading=null});
+  return loading;
+}
+function run(code,ins){
+  return load().then(function(p){var r=JSON.parse(p.globals.get("__run")(code,JSON.stringify(ins)));return{out:r[0],err:r[1]}});
+}
+function show(el,r){
+  el.className=el.className.replace(" on","")+" on";if(el.parentNode.className.indexOf("em2")>-1)el.parentNode.className="kom em2 on";
+  el.innerHTML=esc(r.out)+(r.err?'<span class="er">'+(r.out&&!/\n$/.test(r.out)?"\n":"")+esc(r.err)+"</span>":"")||"(ez da ezer idatzi)";
+}
+function fail(el,e){el.className=el.className.replace(" on","")+" on";if(el.parentNode.className.indexOf("em2")>-1)el.parentNode.className="kom em2 on";el.innerHTML='<span class="er">'+esc(e.message)+"</span>"}
+
+/* titlebars + chips */
+var chips=$("chips");
+Array.prototype.forEach.call(document.querySelectorAll(".leihoa"),function(s){
+  var t=document.createElement("div");t.className="titlebar";
+  t.innerHTML='<span class="dots"><span></span><span></span><span></span></span><span class="path">~/4-gaia/'+esc(s.getAttribute("data-p"))+"</span>";
+  s.insertBefore(t,s.firstChild);
+  var h=s.querySelector("h2");
+  if(h){var a=document.createElement("a");a.href="#"+s.id;a.textContent=s.getAttribute("data-c");chips.appendChild(a)}
+});
+
+/* runnable examples */
+Array.prototype.forEach.call(document.querySelectorAll("pre[data-run]"),function(pre){
+  var box=pre.parentNode,ins=(pre.getAttribute("data-in")||"").split("|").filter(function(x){return x!==""});
+  var bar=document.createElement("div");bar.className="run";
+  var b=document.createElement("button");b.type="button";b.className="btn sm";b.textContent="▶ Exekutatu";
+  bar.appendChild(b);
+  if(ins.length){var n=document.createElement("span");n.style.cssText="font:.7rem var(--mono);color:#8fb4d8";n.textContent="sarrerak: "+ins.join(", ");bar.appendChild(n)}
+  var out=document.createElement("pre");out.className="out";
+  box.appendChild(bar);box.appendChild(out);
+  b.onclick=function(){
+    b.disabled=true;b.textContent="Kargatzen…";
+    run(pre.textContent,ins).then(function(r){show(out,r)},function(e){fail(out,e)}).then(function(){b.disabled=false;b.textContent="▶ Exekutatu"});
+  };
+});
+
+/* progress */
+var KEY="harrobia_python_v1",done={};
+try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
+function prog(){
+  var n=EX.filter(function(x){return done[x[0]]}).length;
+  $("prog").textContent=n+"/"+EX.length;$("progBar").style.width=(100*n/EX.length)+"%";
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}}
+
+/* exercises: [id,atala,izenburua,agindua,hasierakoa,pista,probak] */
+EX.forEach(function(x,k){
+  var host=document.querySelector('.ex[data-s="'+x[1]+'"]');if(!host)return;
+  var d=document.createElement("section");d.className="ariketa"+(done[x[0]]?" eginda":"");d.id=x[0];
+  var rows=Math.max(5,x[4].split("\n").length+3);
+  d.innerHTML='<header><span class="mota">ariketa '+(k+1)+'</span><h3>'+esc(x[2])+'</h3><span class="ik">✅</span></header>'+
+   '<div class="ag"><p>'+x[3]+'</p><textarea rows="'+rows+'" spellcheck="false" aria-label="Kodea" placeholder="# Idatzi zure kodea hemen"></textarea>'+
+   '<label>Sarrerak probatzeko (input bakoitzeko lerro bat)</label><textarea class="sar" rows="2" spellcheck="false" aria-label="Sarrerak"></textarea>'+
+   '<div class="ktr"><button type="button" class="btn b2 r">▶ Exekutatu</button><button type="button" class="btn c">✔ Egiaztatu</button><button type="button" class="btn b2 h">Pista</button></div>'+
+   '<div class="kom em2" style="margin-top:11px"><pre class="out"></pre></div><div class="em"></div></div>';
+  host.appendChild(d);
+  var ta=d.querySelector("textarea"),sar=d.querySelector("textarea.sar"),out=d.querySelector(".out"),em=d.querySelector(".em");
+  ta.value=x[4];
+  var free=false;ta.addEventListener("blur",function(){free=false});
+  ta.addEventListener("keydown",function(e){if(e.key==="Escape"){free=true;return}if(e.key==="Tab"&&!e.shiftKey&&!free){e.preventDefault();var s=ta.selectionStart;ta.value=ta.value.slice(0,s)+"    "+ta.value.slice(ta.selectionEnd);ta.selectionStart=ta.selectionEnd=s+4}});
+  function msg(c,h){em.className="em on "+c;em.innerHTML=h}
+  d.querySelector(".h").onclick=function(){msg("arg","💡 "+esc(x[5]))};
+  var rb=d.querySelector(".r"),cb=d.querySelector(".c");
+  rb.onclick=function(){
+    rb.disabled=true;
+    run(ta.value,sar.value===""?[]:sar.value.split("\n")).then(function(r){show(out,r)},function(e){fail(out,e)}).then(function(){rb.disabled=false});
+  };
+  cb.onclick=async function(){
+    cb.disabled=true;msg("arg","Probak exekutatzen…");
+    try{
+      var bad=null,n=0;
+      for(var i=0;i<x[6].length&&!bad;i++){
+        var t=x[6][i],r=await run(ta.value+(t.post?"\n"+t.post:"")+"\n",t.i);
+        var ok=!r.err&&(t.re!==undefined?new RegExp(t.re).test(r.out):norm(r.out)===t.o);
+        if(ok)n++;else bad={t:t,r:r,i:i};
+      }
+      if(!bad){
+        msg("ona","✅ Zuzena! "+n+"/"+x[6].length+" proba gaindituta.");
+        d.className="ariketa eginda";done[x[0]]=1;save();prog();
+      }else{
+        var h="❌ "+(bad.i+1)+". proba ez da gainditu ("+n+"/"+x[6].length+" zuzen).";
+        if(bad.t.i.length)h+="\nSarrerak: "+esc(bad.t.i.join(", "));
+        if(bad.r.err)h+="\nErrorea: "+esc(bad.r.err);
+        else{if(bad.t.o!==undefined)h+="\nEspero zen:\n<span class=\"mono\">"+esc(bad.t.o)+"</span>";h+="\nLortu duzu:\n<span class=\"mono\">"+esc(bad.r.out||"(ezer ez)")+"</span>"}
+        msg("txarra",h);
+      }
+    }catch(e){msg("txarra","❌ "+esc(e.message))}
+    cb.disabled=false;
+  };
+});
+prog();
+
+/* quiz */
+var qz=$("quiz"),score=0,answered=0;
+QZ.forEach(function(q,i){
+  var g=document.createElement("div");g.className="gal";
+  g.innerHTML="<b>"+(i+1)+". "+q[0]+"</b>";
+  var ex=document.createElement("div");ex.className="arg2";ex.innerHTML=q[3];
+  q[1].forEach(function(o,j){
+    var b=document.createElement("button");b.type="button";b.className="auk";b.innerHTML=o;
+    b.onclick=function(){
+      if(g.getAttribute("data-d"))return;g.setAttribute("data-d","1");
+      var bs=g.querySelectorAll(".auk");bs[q[2]].className="auk ondo";
+      if(j===q[2])score++;else b.className="auk gaizki";
+      ex.className="arg2 on";answered++;
+      if(answered===QZ.length)$("quizEm").innerHTML="Emaitza: <b>"+score+"/"+QZ.length+"</b>"+(score===QZ.length?" — bikain!":" — berrikusi gaizki egindako atalak.");
+    };
+    g.appendChild(b);
+  });
+  g.appendChild(ex);qz.appendChild(g);
+});
+
+/* erloju digitala */
+function p2(n){return n<10?"0"+n:""+n}
+function tick(){var d=new Date();$("clock").textContent=p2(d.getHours())+":"+p2(d.getMinutes())+":"+p2(d.getSeconds())}
+setInterval(tick,1000);tick();
+})();
+</script>
+</body>
+</html>
